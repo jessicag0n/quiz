@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Capivarístico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #ffe2f1;
+      color: #7a0033;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topo {
+      text-align: center;
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+    .titulo-cima {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #ff4da6;
+      text-shadow: 0 0 10px #ff4da6;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .pergunta {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #7a0033;
+    }
+    .centro {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .opcoes {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+      width: 100%;
+    }
+    button {
+      background: #ffd1e6cc;
+      color: #7a0033;
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      min-width: 220px;
+      box-shadow: 0 0 8px #ff99cc;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #ffc0da;
+    }
+    .imagem-capivara {
+      max-width: 170px;
+      width: 70vw;
+      margin: 18px 0 12px 0;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 14px;
+      box-shadow: 0 0 8px #ff99cc;
+    }
+    .nosso-date {
+      background: #ffd1e6cc;
+      color: #7a0033;
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1.1em;
+      margin-top: 10px;
+      margin-bottom: 0;
+      text-align: center;
+      box-shadow: 0 0 8px #ff99cc;
+      display: inline-block;
+    }
+    .baixo {
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 1.15em;
+      color: #ff4da6;
+      text-shadow: 0 0 10px #ff4da6;
+    }
+    @media (max-width: 600px) {
+      .imagem-capivara { max-width: 120px; }
+      .nosso-date { font-size: 1em; padding: 8px 10px; }
+      .titulo-cima, .baixo { font-size: 1em; }
+      .pergunta { font-size: 1em; }
+      button { font-size: 1em; min-width: 150px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topo">
+    <div class="titulo-cima" id="texto-cima">Para manter a sintonia e criar mais memórias boas juntinhas</div>
+    <div class="pergunta" id="pergunta">Qual a última viagem fora de SP que fizemos juntas?</div>
+  </div>
+  <div class="centro">
+    <div class="opcoes" id="opcoes">
+      <button onclick="responder(0)">Pouso Alegre - Comidinhas diliça</button>
+      <button onclick="responder(1)">Paraty - Curtimos um soninho na Praia</button>
+      <button onclick="responder(2)">Curitiba - 'Altas Aventuras'</button>
+    </div>
+    <img src="https://i.imgur.com/rkLaEeN.png" alt="Capivara" class="imagem-capivara">
+    <div class="nosso-date">Nosso Date <br>30/05/2025 às 19h</div>
+  </div>
+  <div class="baixo" id="texto-baixo">TE ENCONTRO NO BALELA</div>
+
+<script>
+  // Exemplo de lógica para alterar pergunta e textos dinamicamente
+  const perguntas = [
+    {
+      textoCima: "Para manter a sintonia e criar mais memórias boas juntinhas",
+      pergunta: "Qual a última viagem fora de SP que fizemos juntas?",
+      opcoes: [
+        "Pouso Alegre - Comidinhas diliça",
+        "Paraty - Curtimos um soninho na Praia",
+        "Curitiba - 'Altas Aventuras'"
+      ],
+      correta: 2
+    },
+    {
+      textoCima: "Ih, estamos precisando de um tempo descontraído juntinhas",
+      pergunta: "Qual nossa bebidinha favorita?",
+      opcoes: [
+        "Gyn com qualquer coisa",
+        "Cervejinha gelada de cada dia",
+        "Vinho pra esquentar o corpo"
+      ],
+      correta: 1
+    }
+  ];
+
+  let etapa = 0;
+
+  function responder(indice) {
+    etapa++;
+    if (etapa < perguntas.length) {
+      document.getElementById('texto-cima').textContent = perguntas[etapa].textoCima;
+      document.getElementById('pergunta').textContent = perguntas[etapa].pergunta;
+      const opcoesDiv = document.getElementById('opcoes');
+      opcoesDiv.innerHTML = '';
+      perguntas[etapa].opcoes.forEach((op, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = op;
+        btn.onclick = () => responder(idx);
+        opcoesDiv.appendChild(btn);
+      });
+    } else {
+      // Mostra mensagem final
+      document.getElementById('texto-cima').textContent = "Parabéns! Obrigada por participar 💖";
+      document.getElementById('pergunta').textContent = "";
+      document.getElementById('opcoes').innerHTML = '';
+    }
+  }
+</script>
+</body>
+</html>
