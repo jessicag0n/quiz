@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Quiz Capivarístico</title>
+<style>
+body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: 'Segoe UI', sans-serif;
+	background-color: #ffe2f1;
+	color: #7a0033;
+	overflow: hidden;
+	position: relative;
+	text-align: center;
+}
+
+#intro {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 4em;
+	font-weight: bold;
+	color: white;
+	text-shadow: 0 0 10px #ff4da6;
+	user-select: none;
+	white-space: nowrap;
+	z-index: 1000;
+}
+
+#pergunta {
+	font-size: 1.8em;
+	font-weight: bold;
+	margin-bottom: 20px;
+	color: #ff4da6;
+	text-shadow: 0 0 10px #ff4da6;
+	text-align: center;
+}
+
+#opcoes {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+}
+
+button {
+	background: #ffd1e6cc;
+	color: white;
+	padding: 15px 25px;
+	border-radius: 12px;
+	box-shadow: 0 0 12px #ff99cc;
+	font-weight: bold;
+	font-size: 1.3em;
+	line-height: 1.4;
+	white-space: normal;
+	user-select: none;
+	text-shadow: 0 0 10px #ff4da6;
+	border: none;
+	cursor: pointer;
+	min-width: 300px;
+	max-width: 700px;
+}
+
+button:hover {
+	background-color: #ffc0da;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.texto {
+	max-width: 700px;
+	font-size: 1.4em;
+	font-weight: bold;
+	margin: 0 auto 30px;
+	line-height: 1.5;
+	color: white;
+	text-shadow: 0 0 10px #ff4da6;
+	white-space: pre-wrap;
+	text-transform: uppercase;
+	min-height: 90px;
+}
+
+.convite-container {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	margin-top: 30px;
+	gap: 20px;
+}
+
+.imagem-capivara {
+	max-width: 250px;
+	height: auto;
+	margin: 0;
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.nosso-date {
+	background: #ffd1e6cc;
+	color: white;
+	padding: 15px 25px;
+	border-radius: 12px;
+	box-shadow: 0 0 12px #ff99cc;
+	font-weight: bold;
+	font-size: 1.3em;
+	line-height: 1.4;
+	opacity: 0;
+	transform: scale(0.8);
+	transition: opacity 0.7s ease, transform 0.7s ease;
+	align-self: flex-start;
+	white-space: nowrap;
+	user-select: none;
+	text-shadow: 0 0 10px #ff4da6;
+}
+
+.mensagem-baixo {
+	font-size: 1.4em;
+	color: white;
+	text-shadow: 0 0 10px #ff4da6;
+	margin-top: 20px;
+	display: none;
+}
+
+.emoji-brinde {
+	font-size: 3em;
+	animation: pular 1s ease-in-out infinite alternate;
+	margin-top: 20px;
+	display: none;
+}
+
+@keyframes pular {
+	from { transform: translateY(0); }
+	to { transform: translateY(-20px); }
+}
+
+.coracoes-subindo {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	z-index: 0;
+}
+
+.coracoes-subindo span {
+	position: absolute;
+	color: #ff69b4;
+	font-size: 24px;
+	animation: subir 4s linear forwards;
+	opacity: 0;
+}
+
+@keyframes subir {
+	0% { bottom: 0; opacity: 1; transform: translateX(0); }
+	100% { bottom: 100%; opacity: 0; transform: translateX(50px); }
+}
+</style>
+</head>
+<body>
+<div class="coracoes-subindo"></div>
+<div id="intro"></div>
+<p id="pergunta" class="hidden"></p>
+<div id="opcoes" class="hidden"></div>
+<div id="convite" class="hidden">
+	<div class="texto" id="mensagem-topo"></div>
+	<div class="convite-container">
+		<img id="imagem-capivara" class="imagem-capivara" src="https://i.imgur.com/rkLaEeN.png" alt="Capivara" />
+		<div id="nosso-date" class="nosso-date">Nosso Date <br>30/05/2025 às 19h</div>
+	</div>
+	<div id="mensagem-baixo" class="mensagem-baixo">TE ENCONTRO NO BALELA</div> 
+	<div id="emoji-brinde" class="emoji-brinde">🍺🍺</div>
+</div>
+<script>
+const perguntas = [
+	{
+		texto: "Qual a última viagem fora de SP que fizemos juntas?",
+		opcoes: ["Pouso Alegre - Comidinhas diliça", "Paraty - Curtimos um soninho na Praia", "Curitiba - 'Altas Aventuras'"],
+		correta: "Curitiba - 'Altas Aventuras'"
+	},
+	{
+		texto: "Qual nossa bebidinha favorita?",
+		opcoes: ["Gyn com qualquer coisa", "Cervejinha gelada de cada dia", "Vinho pra esquentar o corpo"],
+		correta: "Cervejinha gelada de cada dia"
+	},
+	{
+		texto: "O que anda assanhando as Lulu?",
+		opcoes: ["Doce como ocê", "Tudo e mais um pouco", "Nadinha"], 
+		correta: null
+	}
+];
+
+let etapa = 0;
+let acertos = 0;
+
+const introEl = document.getElementById('intro');
+const perguntaEl = document.getElementById('pergunta');
+const opcoesDiv = document.getElementById('opcoes');
+const coracoesDiv = document.querySelector('.coracoes-subindo');
+
+function digitarTexto(texto, elemento, velocidade = 150, callback) {
+	let i = 0;
+	elemento.textContent = "";
+	function digitar() {
+		if (i < texto.length) {
+			elemento.textContent += texto.charAt(i);
+			i++;
+			setTimeout(digitar, velocidade);
+		} else {
+			if (callback) callback();
+		}
+	}
+	digitar();
+}
+
+function iniciarCoracoes() {
+	setInterval(() => {
+		for (let i = 0; i < 15; i++) {
+			const heart = document.createElement('span');
+			heart.innerText = '💖';
+			heart.style.left = Math.random() * 100 + '%';
+			heart.style.animationDuration = 2 + Math.random() * 2 + 's';
+			coracoesDiv.appendChild(heart);
+			setTimeout(() => heart.remove(), 5000);
+		}
+	}, 300);
+}
+
+function finalizarConvite() {
+	const convite = document.getElementById('convite');
+	convite.classList.remove('hidden');
+
+	// Mensagem personalizada só conta os 2 primeiros acertos
+	const textoCima = acertos >= 2
+		? "Para manter a sintonia e criar mais memórias boas juntinhas"
+		: "Ih, estamos precisando de um tempo descontraído juntinhas";
+
+	const imagem = document.getElementById('imagem-capivara');
+	const cartaz = document.getElementById('nosso-date');
+	const mensagemTopo = document.getElementById('mensagem-topo');
+	const mensagemBaixo = document.getElementById('mensagem-baixo');
+	const emojiBrinde = document.getElementById('emoji-brinde');
+
+	digitarTexto(textoCima, mensagemTopo, 50, () => {
+		iniciarCoracoes();
+		imagem.style.opacity = 1;
+		imagem.style.transform = 'translateY(0)';
+		setTimeout(() => {
+			cartaz.style.opacity = 1;
+			cartaz.style.transform = 'scale(1)';
+			setTimeout(() => {
+				mensagemBaixo.style.display = 'block';
+				setTimeout(() => {
+					emojiBrinde.style.display = 'block';
+				}, 700);
+			}, 700);
+		}, 700);
+	});
+}
+
+function mostrarPergunta() {
+	if (etapa >= perguntas.length) return;
+	perguntaEl.innerText = perguntas[etapa].texto;
+	perguntaEl.classList.remove('hidden');
+	opcoesDiv.innerHTML = "";
+	opcoesDiv.classList.remove('hidden');
+
+	perguntas[etapa].opcoes.forEach((op) => {
+		const btn = document.createElement("button");
+		btn.innerText = op;
+		btn.onclick = () => {
+			if (etapa < 2 && (perguntas[etapa].correta === null || op === perguntas[etapa].correta)) {
+				acertos++;
+			}
+			etapa++;
+			if (etapa >= perguntas.length) {
+				// Esconde pergunta e opções imediatamente e inicia animação
+				perguntaEl.classList.add('hidden');
+				opcoesDiv.classList.add('hidden');
+				finalizarConvite();
+			} else {
+				mostrarPergunta();
+			}
+		};
+		opcoesDiv.appendChild(btn);
+	});
+}
+
+digitarTexto("Oi, nenis !", introEl, 200, () => {
+	setTimeout(() => {
+		introEl.style.display = 'none';
+		mostrarPergunta();
+	}, 1200);
+});
+</script>
+</body>
+</html>
